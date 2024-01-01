@@ -11,6 +11,15 @@ function toTitleCase(str) {
   return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 }
 
+//function for randomizing the order of actors
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 function App() {
   //game state variables
   const [gameStarted, setGameStarted] = useState(false);
@@ -38,6 +47,8 @@ function App() {
         const data = response.data;
         setFilmTitle(data.title);
         setActorImages(data.actors.map(actorImageUrl => 'http://localhost:8000' + actorImageUrl));
+        const shuffledActorImages = shuffleArray(data.actors.map(actorImageUrl => 'http://localhost:8000' + actorImageUrl));
+        setActorImages(shuffledActorImages);
         setPosterImage('http://localhost:8000' + data.poster);
       })
       .catch(error => {
