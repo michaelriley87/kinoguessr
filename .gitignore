@@ -1,0 +1,26 @@
+# Python-related items
+venv/
+*.pyc
+__pycache__/
+db.sqlite3
+
+# Django media files
+media/
+
+# Django specific
+*.log
+.local
+
+# React/node.js specific
+kino_guessr_frontend/node_modules/
+kino_guessr_frontend/build/
+kino_guessr_frontend/.env
+kino_guessr_frontend/npm-debug.log
+
+# MacOS specific
+.DS_Store
+
+# Editor specific
+.vscode/
+.idea/
+*.swp

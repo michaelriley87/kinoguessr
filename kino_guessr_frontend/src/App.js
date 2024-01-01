@@ -1,17 +1,10 @@
 import './App.css';
 import React, { useState, useRef } from 'react';
 import { Box, Button, Card, CardContent, Container, Grid, TextField, Typography } from '@mui/material';
+import axios from 'axios';
 import headerImage from './images/header.png';
-import blankImage from './images/blank.png';
-import blankImage2 from './images/blank2.png';
-
-//test case images before backend is built
-import test1 from './images/test1.png';
-import test2 from './images/test2.png';
-import test3 from './images/test3.png';
-import test4 from './images/test4.png';
-import test5 from './images/test5.png';
-import test6 from './images/test6.png';
+import actorCardReverse from './images/actor-card-reverse.png';
+import posterCardReverse from './images/poster-card-reverse.png';
 
 //function to transform answers to title case pre-display
 function toTitleCase(str) {
@@ -25,9 +18,9 @@ function App() {
   const [message, setMessage] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [isCorrect, setIsCorrect] = useState(false);
-
-  //test case answer before backend is built
-  const correctAnswer = "Pulp Fiction";
+  const [filmTitle, setFilmTitle] = useState('');
+  const [actorImages, setActorImages] = useState([]);
+  const [posterImage, setPosterImage] = useState('');
 
   //refocus the input box on button clicks
   const inputRef = useRef(null);
@@ -40,6 +33,17 @@ function App() {
 
   //start game on 'Start' button click
   const startGame = () => {
+    axios.get('http://localhost:8000/api/get_random_film/')
+      .then(response => {
+        const data = response.data;
+        setFilmTitle(data.title);
+        setActorImages(data.actors.map(actorImageUrl => 'http://localhost:8000' + actorImageUrl));
+        setPosterImage('http://localhost:8000' + data.poster);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  
     setGameStarted(true);
     setTimeout(focusInput, 100);
   };
@@ -55,7 +59,7 @@ function App() {
     
     const guess = userGuess.trim() === '' ? '*Pass*' : toTitleCase(userGuess);
 
-    if (guess.toLowerCase() === correctAnswer.toLowerCase()) {
+    if (guess.toLowerCase() === filmTitle.toLowerCase()) {
       setIsCorrect(true);
       setMessage(previousMessage => previousMessage + `\n${newAttemptNumber}. ${guess} - Correct!`);
     } else {
@@ -72,6 +76,9 @@ function App() {
     setMessage('');
     setIsCorrect(false);
     setGameStarted(false);
+    setFilmTitle('');
+    setActorImages([]);
+    setPosterImage('');
   };
 
   //grid element styling
@@ -85,24 +92,24 @@ function App() {
     borderRadius: '10px',
     border: '5px solid white',
     backgroundColor: '#f5eedc',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.4)'
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.5)'
   };
 
   return (
-    <div style={{ backgroundColor: '#8eb7d4', height: '100vh' }}>
+    <div style={{ backgroundColor: '#4e7699', height: '100vh' }}>
       <Box display="flex" justifyContent="center" alignItems="center" padding={1}>
         <img src={headerImage} alt="Header" style={{ maxWidth: '100%', width: '40vw', height: 'auto', borderRadius: '10px' }} />
       </Box>
       <Container maxWidth="md">
-        <Grid container spacing={2} justifyContent="center">
+        <Grid container spacing={2.5} justifyContent="center">
           <Grid item xs={3}>
-            <img src={gameStarted ? test1 : blankImage} alt="Actor 1" style={gridItemStyle} />
+            <img src={gameStarted ? actorImages[0] : actorCardReverse} alt="Actor 1" style={gridItemStyle} />
           </Grid>
           <Grid item xs={3}>
-            <img src={isCorrect || attempts > 0 ? test2 : blankImage} alt="Actor 2" style={gridItemStyle} />
+            <img src={isCorrect || attempts > 0 ? actorImages[1] : actorCardReverse} alt="Actor 2" style={gridItemStyle} />
           </Grid>
           <Grid item xs={3}>
-            <img src={isCorrect || attempts > 1 ? test3 : blankImage} alt="Actor 3" style={gridItemStyle} />
+            <img src={isCorrect || attempts > 1 ? actorImages[2] : actorCardReverse} alt="Actor 3" style={gridItemStyle} />
           </Grid>
           <Grid item xs={3}>
             <Card  style={gridItemStyle}>
@@ -123,13 +130,13 @@ function App() {
             </Card>
           </Grid>
           <Grid item xs={3}>
-            <img src={isCorrect || attempts > 2 ? test4 : blankImage} alt="Actor 5" style={gridItemStyle} />
+            <img src={isCorrect || attempts > 2 ? actorImages[3] : actorCardReverse} alt="Actor 4" style={gridItemStyle} />
           </Grid>
           <Grid item xs={3}>
-            <img src={isCorrect || attempts > 3 ? test5 : blankImage} alt="Actor 6" style={gridItemStyle} />
+            <img src={isCorrect || attempts > 3 ? actorImages[4] : actorCardReverse} alt="Actor 5" style={gridItemStyle} />
           </Grid>
           <Grid item xs={3}>
-            <img src={isCorrect || attempts >= 5 ? test6 : blankImage2} alt="Actor 7" style={gridItemStyle} />
+            <img src={isCorrect || attempts >= 5 ? posterImage : posterCardReverse} alt="Poster" style={gridItemStyle} />
           </Grid>
           <Grid item xs={3}>
             <Card style={gridItemStyle}>
