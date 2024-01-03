@@ -24,4 +24,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/get_random_film/', views.get_random_film, name='get_random_film'),
+    path('api/get_film_names/', views.get_film_names, name='get_film_names'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,12 +1,12 @@
 import './App.css';
-import React, { useState, useRef } from 'react';
-import { Box, Button, Card, CardContent, Container, Grid, TextField, Typography } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+import { Autocomplete, Box, Button, Card, CardContent, Container, Grid, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import headerImage from './images/header.png';
 import actorCardReverse from './images/actor-card-reverse.png';
 import posterCardReverse from './images/poster-card-reverse.png';
 
-//function to transform answers to title case pre-display
+//function to transform answers to title-case pre-display
 function toTitleCase(str) {
   return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 }
@@ -30,25 +30,26 @@ function App() {
   const [filmTitle, setFilmTitle] = useState('');
   const [actorImages, setActorImages] = useState([]);
   const [posterImage, setPosterImage] = useState('');
+  const [filmNames, setFilmNames] = useState([]);
+  const autocompleteRef = useRef(null);
 
-  //refocus the input box on button clicks
-  const inputRef = useRef(null);
-  const focusInput = () => {
-    const input = inputRef.current?.querySelector('input');
-    if (input) {
-      input.focus();
-    }
-  };
+  //populate a list of all film names in database for autocomplete
+  useEffect(() => {
+    axios.get('http://localhost:8000/api/get_film_names/')
+      .then(response => {
+        setFilmNames(response.data);
+      })
+      .catch(error => console.error('Error fetching film names:', error));
+  }, []);
 
-  //start game on 'Start' button click
+  //start game on 'Start' button click, get film from backend
   const startGame = () => {
     axios.get('http://localhost:8000/api/get_random_film/')
       .then(response => {
         const data = response.data;
         setFilmTitle(data.title);
-        setActorImages(data.actors.map(actorImageUrl => 'http://localhost:8000' + actorImageUrl));
-        const shuffledActorImages = shuffleArray(data.actors.map(actorImageUrl => 'http://localhost:8000' + actorImageUrl));
-        setActorImages(shuffledActorImages);
+        const actorImgUrls = data.actors.map(actorImageUrl => 'http://localhost:8000' + actorImageUrl);
+        setActorImages(shuffleArray(actorImgUrls));
         setPosterImage('http://localhost:8000' + data.poster);
       })
       .catch(error => {
@@ -56,13 +57,12 @@ function App() {
       });
   
     setGameStarted(true);
-    setTimeout(focusInput, 100);
   };
 
   //process guesses on 'submit' button click / return
   const handleSubmit = (event) => {
     event.preventDefault();
-  
+
     if (!gameStarted || isCorrect || attempts >= 5) return;
   
     const newAttemptNumber = attempts + 1;
@@ -77,7 +77,14 @@ function App() {
       setMessage(previousMessage => previousMessage + `\n${newAttemptNumber}. ${guess}`);
     }
     setUserGuess('');
-    setTimeout(focusInput, 100);
+    
+    //refocus textfield on button click
+    if (autocompleteRef.current) {
+      const input = autocompleteRef.current.querySelector('input');
+      if (input) {
+        input.focus();
+      }
+    }
   };
 
   //reset game on 'new game' button click
@@ -147,23 +154,36 @@ function App() {
             <img src={isCorrect || attempts > 3 ? actorImages[4] : actorCardReverse} alt="Actor 5" style={gridItemStyle} />
           </Grid>
           <Grid item xs={3}>
-            <img src={isCorrect || attempts >= 5 ? posterImage : posterCardReverse} alt="Poster" style={gridItemStyle} />
+            <img src={isCorrect || attempts > 4 ? posterImage : posterCardReverse} alt="Poster" style={gridItemStyle} />
           </Grid>
           <Grid item xs={3}>
             <Card style={gridItemStyle}>
               {gameStarted ? (
-                <>
-                  <form onSubmit={handleSubmit}>
-                    <TextField label="Guess"
-                      variant="standard"
-                      value={userGuess}
-                      onChange={(e) => setUserGuess(e.target.value)}
-                      disabled={attempts >= 5 || isCorrect}
-                      inputProps={{ maxLength: 40 }}
-                      ref={inputRef}
-                    />
-                    <Button type="submit" disabled={attempts >= 5 || isCorrect}>Submit</Button>
-                  </form>
+                  <>
+                    <form onSubmit={handleSubmit}>
+                      <Autocomplete
+                        renderInput={(params) => (
+                          <TextField 
+                            {...params}
+                            label="Guess"
+                            variant="standard"
+                            autoFocus
+                            autoComplete="off"
+                            spellCheck="false"
+                            inputProps={{ ...params.inputProps, maxLength: 40 }}
+                            sx={{ width: 'auto', minWidth: 190 }}
+                          />
+                        )}
+                        ref={autocompleteRef}
+                        freeSolo
+                        options={userGuess.length > 0 ? filmNames.filter(name => name.toLowerCase().startsWith(userGuess.toLowerCase())).slice(0, 3) : []}
+                        value={userGuess}
+                        clearIcon={null}
+                        onInputChange={(event, newInputValue) => {setUserGuess(newInputValue);}}
+                        disabled={attempts >= 5 || isCorrect}
+                      />
+                      <Button type="submit" disabled={attempts >= 5 || isCorrect}>Submit</Button>
+                    </form>
                   <div style={{ textAlign: 'left', width: '100%' }}>
                     {message.split('\n').map((line, i) => (
                       <Typography key={i} style={{ color: line.includes('Correct!') ? 'green' : 'red' }}>
@@ -175,9 +195,9 @@ function App() {
                     <Button onClick={handleReset} style={{ marginTop: '10px' }}>New Game</Button>
                   )}
                 </>
-              ) : (
-                <Button onClick={startGame} style={{ height: '40px' }}>Start</Button>
-              )}
+                ) : (
+                  <Button onClick={startGame} style={{ height: '40px' }}>Start</Button>
+                )}
             </Card>
           </Grid>
         </Grid>

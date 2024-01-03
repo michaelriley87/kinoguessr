@@ -14,3 +14,7 @@ def get_random_film(request):
         'poster': poster.image_file.url
     }
     return JsonResponse(film_data)
+
+def get_film_names(request):
+    film_names = [film.title for film in Film.objects.all().order_by('title')]
+    return JsonResponse(film_names, safe=False)
