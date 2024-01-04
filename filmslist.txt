@@ -12,19 +12,15 @@ Shooter (2007)
 The Perfect Storm (2000)
 Wall Street (1987)
 Rounders (1998)
-Con Air (1997)
-GoldenEye (1995)
 National Treasure (2004)
 The Big Short (2015)
 Jumanji (1995)
 Liar Liar (1997)
-The Girl Next Door (2004)
 50 First Dates [2004]
 A Perfect Murder [1998]
 Airheads [1994]
 American Psycho [2000]
 Blow [2001]
-Casino Royale [2006]
 Charlies Angels [2000]
 Clueless [1995]
 Crank [2006] 
@@ -35,15 +31,12 @@ Election [1999]
 Empire Records [1995] 
 Encino Man [1992] 
 Entrapment [1999]
-Fast Times at Ridgemont High [1982] 
 Fight Club [1999] 
-Forces Of Nature [1999] 
 Go [1999]
 Groundhog Day [1993]
 Hackers [1995] 
 Half Baked [1998]
 Happy Gilmore [1996] 
-Hollow Man [2000] 
 Horrible Bosses [2011] 
 Hot Rod [2007] 
 I Know What You Did Last Summer [1997] 
@@ -56,7 +49,6 @@ Mars Attacks [1996]
 Matchstick Men [2003]
 Mean Girls [2004]
 Mission Impossible [1996]
-Mystic River [2003]
 Napoleon Dynamite [2004]
 Nightcrawler [2014]
 Observe and Report [2009]
@@ -71,4 +63,7 @@ RoboCop [1987]
 Role Models [2008]
 Predator (1987)
 Twins (1988)
-The Faculty (1998)
+Saving Silverman (2001)
+War Dogs (2016)
+Green Street Hooligans (2005)
+Training Day (2001)

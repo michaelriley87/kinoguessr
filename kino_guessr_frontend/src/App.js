@@ -31,20 +31,26 @@ function App() {
   const [actorImages, setActorImages] = useState([]);
   const [posterImage, setPosterImage] = useState('');
   const [filmNames, setFilmNames] = useState([]);
+  const [filmIDs, setFilmIDs] = useState({});
   const autocompleteRef = useRef(null);
 
-  //populate a list of all film names in database for autocomplete
+  //retrieve film names/ids for autocomplete and data retrieval
   useEffect(() => {
     axios.get('http://localhost:8000/api/get_film_names/')
       .then(response => {
         setFilmNames(response.data);
       })
       .catch(error => console.error('Error fetching film names:', error));
+      axios.get('http://localhost:8000/api/get_film_indexes/')
+        .then(response => {
+          setFilmIDs(response.data);
+        })
+        .catch(error => console.error('Error fetching film names:', error));
   }, []);
 
-  //start game on 'Start' button click, get film from backend
-  const startGame = () => {
-    axios.get('http://localhost:8000/api/get_random_film/')
+  //retrieve film data from id
+  const fetchFilmDetailsById = (filmId) => {
+    axios.get(`http://localhost:8000/api/get_film_details/${filmId}`)
       .then(response => {
         const data = response.data;
         setFilmTitle(data.title);
@@ -53,10 +59,22 @@ function App() {
         setPosterImage('http://localhost:8000' + data.poster);
       })
       .catch(error => {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching film details by ID:', error);
       });
-  
-    setGameStarted(true);
+  };
+
+  //start game on 'Start' button click, get film from backend
+  const startGame = () => {
+    if (filmIDs.length === 0) {
+      console.error('No more films available');
+      return;
+    }
+    const randomIndex = Math.floor(Math.random() * filmIDs.length);
+    const selectedFilmId = filmIDs[randomIndex];
+    setFilmIDs(currentIDs => currentIDs.filter(id => id !== selectedFilmId));
+    fetchFilmDetailsById(selectedFilmId);
+    setGameStarted(true); 
+    console.log('State:', { filmIDs });
   };
 
   //process guesses on 'submit' button click / return
@@ -78,7 +96,6 @@ function App() {
     }
     setUserGuess('');
     
-    //refocus textfield on button click
     if (autocompleteRef.current) {
       const input = autocompleteRef.current.querySelector('input');
       if (input) {
@@ -191,9 +208,11 @@ function App() {
                       </Typography>
                     ))}
                   </div>
-                  {(isCorrect || attempts >= 5) && (
+                  {(isCorrect || attempts >= 5) && (filmIDs.length > 0 ? (
                     <Button onClick={handleReset} style={{ marginTop: '10px' }}>New Game</Button>
-                  )}
+                  ) : (
+                    <div style={{ textAlign: 'center', marginTop: '10px' }}>No more new games</div>
+                  ))}
                 </>
                 ) : (
                   <Button onClick={startGame} style={{ height: '40px' }}>Start</Button>
