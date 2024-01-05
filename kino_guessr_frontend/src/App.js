@@ -27,11 +27,11 @@ function App() {
   const [message, setMessage] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [filmNames, setFilmNames] = useState([]);
+  const [filmIDs, setFilmIDs] = useState({});
   const [filmTitle, setFilmTitle] = useState('');
   const [actorImages, setActorImages] = useState([]);
   const [posterImage, setPosterImage] = useState('');
-  const [filmNames, setFilmNames] = useState([]);
-  const [filmIDs, setFilmIDs] = useState({});
   const autocompleteRef = useRef(null);
 
   //retrieve film names/ids for autocomplete and data retrieval
@@ -41,51 +41,45 @@ function App() {
         setFilmNames(response.data);
       })
       .catch(error => console.error('Error fetching film names:', error));
-      axios.get('http://localhost:8000/api/get_film_indexes/')
-        .then(response => {
-          setFilmIDs(response.data);
-        })
-        .catch(error => console.error('Error fetching film names:', error));
+    axios.get('http://localhost:8000/api/get_film_indexes/')
+      .then(response => {
+        setFilmIDs(response.data);
+      })
+      .catch(error => console.error('Error fetching film names:', error));
   }, []);
 
   //retrieve film data from id
-  const fetchFilmDetailsById = (filmId) => {
-    axios.get(`http://localhost:8000/api/get_film_details/${filmId}`)
-      .then(response => {
-        const data = response.data;
-        setFilmTitle(data.title);
-        const actorImgUrls = data.actors.map(actorImageUrl => 'http://localhost:8000' + actorImageUrl);
-        setActorImages(shuffleArray(actorImgUrls));
-        setPosterImage('http://localhost:8000' + data.poster);
-      })
-      .catch(error => {
-        console.error('Error fetching film details by ID:', error);
-      });
+  const fetchFilmDetailsById = async (filmId) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/get_film_details/${filmId}`);
+      const data = response.data;
+      setFilmTitle(data.title);
+      const actorImgUrls = data.actors.map(actorImageUrl => 'http://localhost:8000' + actorImageUrl);
+      setActorImages(shuffleArray(actorImgUrls));
+      setPosterImage('http://localhost:8000' + data.poster);
+    } catch (error) {
+      console.error('Error fetching film details by ID:', error);
+    }
   };
 
-  //start game on 'Start' button click, get film from backend
+  //start game on 'Start' button click, select random film and remove from pool
   const startGame = () => {
-    if (filmIDs.length === 0) {
-      console.error('No more films available');
-      return;
-    }
     const randomIndex = Math.floor(Math.random() * filmIDs.length);
     const selectedFilmId = filmIDs[randomIndex];
     setFilmIDs(currentIDs => currentIDs.filter(id => id !== selectedFilmId));
-    fetchFilmDetailsById(selectedFilmId);
-    setGameStarted(true); 
-    console.log('State:', { filmIDs });
+    fetchFilmDetailsById(selectedFilmId)
+      .then(() => {
+        setGameStarted(true);
+      });
   };
 
   //process guesses on 'submit' button click / return
   const handleSubmit = (event) => {
     event.preventDefault();
-
     if (!gameStarted || isCorrect || attempts >= 5) return;
-  
+
     const newAttemptNumber = attempts + 1;
     setAttempts(newAttemptNumber);
-    
     const guess = userGuess.trim() === '' ? '*Pass*' : toTitleCase(userGuess);
 
     if (guess.toLowerCase() === filmTitle.toLowerCase()) {
@@ -116,20 +110,6 @@ function App() {
     setPosterImage('');
   };
 
-  //grid element styling
-  const gridItemStyle = {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column', 
-    justifyContent: 'flex-start', 
-    alignItems: 'center',
-    borderRadius: '10px',
-    border: '5px solid white',
-    backgroundColor: '#f5eedc',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.5)'
-  };
-
   return (
     <div style={{ backgroundColor: '#4e7699', height: '100vh' }}>
       <Box display="flex" justifyContent="center" alignItems="center" padding={1}>
@@ -138,16 +118,16 @@ function App() {
       <Container maxWidth="md">
         <Grid container spacing={2.5} justifyContent="center">
           <Grid item xs={3}>
-            <img src={gameStarted ? actorImages[0] : actorCardReverse} alt="Actor 1" style={gridItemStyle} />
+            <img src={gameStarted ? actorImages[0] : actorCardReverse} alt="Actor 1" className="grid-item" />
           </Grid>
           <Grid item xs={3}>
-            <img src={isCorrect || attempts > 0 ? actorImages[1] : actorCardReverse} alt="Actor 2" style={gridItemStyle} />
+            <img src={isCorrect || attempts > 0 ? actorImages[1] : actorCardReverse} alt="Actor 2" className="grid-item" />
           </Grid>
           <Grid item xs={3}>
-            <img src={isCorrect || attempts > 1 ? actorImages[2] : actorCardReverse} alt="Actor 3" style={gridItemStyle} />
+            <img src={isCorrect || attempts > 1 ? actorImages[2] : actorCardReverse} alt="Actor 3" className="grid-item" />
           </Grid>
           <Grid item xs={3}>
-            <Card  style={gridItemStyle}>
+            <Card className="grid-item">
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   Instructions
@@ -165,16 +145,16 @@ function App() {
             </Card>
           </Grid>
           <Grid item xs={3}>
-            <img src={isCorrect || attempts > 2 ? actorImages[3] : actorCardReverse} alt="Actor 4" style={gridItemStyle} />
+            <img src={isCorrect || attempts > 2 ? actorImages[3] : actorCardReverse} alt="Actor 4" className="grid-item" />
           </Grid>
           <Grid item xs={3}>
-            <img src={isCorrect || attempts > 3 ? actorImages[4] : actorCardReverse} alt="Actor 5" style={gridItemStyle} />
+            <img src={isCorrect || attempts > 3 ? actorImages[4] : actorCardReverse} alt="Actor 5" className="grid-item" />
           </Grid>
           <Grid item xs={3}>
-            <img src={isCorrect || attempts > 4 ? posterImage : posterCardReverse} alt="Poster" style={gridItemStyle} />
+            <img src={isCorrect || attempts > 4 ? posterImage : posterCardReverse} alt="Poster" className="grid-item" />
           </Grid>
           <Grid item xs={3}>
-            <Card style={gridItemStyle}>
+            <Card className="grid-item">
               {gameStarted ? (
                   <>
                     <form onSubmit={handleSubmit}>

@@ -17,3 +17,4 @@ class Poster(models.Model):
     film = models.OneToOneField(Film, related_name='poster', on_delete=models.CASCADE)
     def __str__(self):
         return os.path.basename(self.image_file.name)
+    
