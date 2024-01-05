@@ -1,7 +1,7 @@
-# KinoGuesser: A Movie Guessing Game App
+# KinoGuessr: A Movie Guessing Game App
 
 ## Introduction
-Welcome to KinoGuesser, a captivating movie guessing game. Inspired by the popularity of simple web-based guessing games like **Wordle** and **Geoguessr**, this app challenges players to identify films based on actors images. It's a fun and interactive way to test your movie knowledge.
+Welcome to KinoGuessr, a captivating movie guessing game. Inspired by the popularity of simple web-based guessing games like **Wordle** and **Geoguessr**, this app challenges players to identify films based on actors images. It's a fun and interactive way to test your movie knowledge.
 
 ## How to Play
 1. **Start the Game:** Click the 'Start' button to begin.
