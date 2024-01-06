@@ -23,6 +23,13 @@ function shuffleArray(array) {
   return array;
 }
 
+//function to extract actor name from file name
+function getFilenameFromUrl(url) {
+  if (!url) {return ''}
+  const match = url.match(/([^\/]+)(?=\.\w+$)/);
+  return match ? match[0].replace(/_/g, ' ') : '';
+}
+
 function App() {
   //game state variables
   const [gameStarted, setGameStarted] = useState(false);
@@ -137,7 +144,7 @@ function App() {
                   <img src={actorCardReverse} alt="Actor 1" className="grid-item"/>
                 </div>
                 <div className="flip-card-back">
-                  <img src={actorImages[0]} alt="Actor 1" className="grid-item"/>
+                  <img src={actorImages[0]} alt={getFilenameFromUrl(actorImages[0])} title={getFilenameFromUrl(actorImages[0])} className="grid-item"/>
                 </div>
               </div>
             </div>
@@ -149,7 +156,7 @@ function App() {
                   <img src={actorCardReverse} alt="Actor 2" className="grid-item"/>
                 </div>
                 <div className="flip-card-back">
-                  <img src={actorImages[1]} alt="Actor 2" className="grid-item"/>
+                  <img src={actorImages[1]} alt={getFilenameFromUrl(actorImages[1])} title={getFilenameFromUrl(actorImages[1])} className="grid-item"/>
                 </div>
               </div>
             </div>
@@ -161,7 +168,7 @@ function App() {
                   <img src={actorCardReverse} alt="Actor 3" className="grid-item"/>
                 </div>
                 <div className="flip-card-back">
-                  <img src={actorImages[2]} alt="Actor 3" className="grid-item"/>
+                  <img src={actorImages[2]} alt={getFilenameFromUrl(actorImages[2])} title={getFilenameFromUrl(actorImages[2])} className="grid-item"/>
                 </div>
               </div>
             </div>
@@ -191,7 +198,7 @@ function App() {
                   <img src={actorCardReverse} alt="Actor 4" className="grid-item"/>
                 </div>
                 <div className="flip-card-back">
-                  <img src={actorImages[3]} alt="Actor 4" className="grid-item"/>
+                  <img src={actorImages[3]} alt={getFilenameFromUrl(actorImages[3])} title={getFilenameFromUrl(actorImages[3])} className="grid-item"/>
                 </div>
               </div>
             </div>
@@ -203,7 +210,7 @@ function App() {
                   <img src={actorCardReverse} alt="Actor 5" className="grid-item"/>
                 </div>
                 <div className="flip-card-back">
-                  <img src={actorImages[4]} alt="Actor 5" className="grid-item"/>
+                  <img src={actorImages[4]} alt={getFilenameFromUrl(actorImages[4])} title={getFilenameFromUrl(actorImages[4])} className="grid-item"/>
                 </div>
               </div>
             </div>
@@ -215,7 +222,7 @@ function App() {
                   <img src={posterCardReverse} alt="Poster" className="grid-item"/>
                 </div>
                 <div className="flip-card-back">
-                  <img src={posterImage} alt="Poster" className="grid-item"/>
+                  <img src={posterImage} alt={getFilenameFromUrl(posterImage)} title={getFilenameFromUrl(posterImage)} className="grid-item"/>
                 </div>
               </div>
             </div>
