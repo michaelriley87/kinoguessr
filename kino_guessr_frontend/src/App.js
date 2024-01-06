@@ -1,6 +1,6 @@
 import "./App.css";
 import React, { useEffect, useRef, useState } from "react";
-import { Autocomplete, Box, Button, Card, CardContent, Container, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, CardContent, TextField, Typography } from '@mui/material';
 import axios from "axios";
 import headerImage from "./images/header.png";
 import actorCardReverse from "./images/actor-card-reverse.png";
@@ -135,149 +135,99 @@ function App() {
       <Box className="header-box">
         <img src={headerImage} alt="Header" className="header-image" />
       </Box>
-      <Container maxWidth="md">
-        <Grid container spacing={2.5} justifyContent="center">
-          <Grid item xs={3}>
-            <div className="flip-card">
-              <div className={`flip-card-inner ${gameStarted ? 'flip' : ''}`}>
-                <div className="flip-card-front">
-                  <img src={actorCardReverse} alt="Actor 1" className="grid-item"/>
+      <div className="flex-container">
+        <div className="flex-row">
+          <div className={`flip-card ${gameStarted ? 'flip' : ''}`}>
+            <img src={actorCardReverse} alt="Actor " className="card flip-card-front"/>
+            <img src={actorImages[0]} alt={getFilenameFromUrl(actorImages[0])} title={getFilenameFromUrl(actorImages[0])} className="card flip-card-back"/>
+          </div>
+          <div className={`flip-card ${isCorrect || attempts > 0 ? 'flip' : ''}`}>
+            <img src={actorCardReverse} alt="Actor 2" className="card flip-card-front"/>
+            <img src={actorImages[1]} alt={getFilenameFromUrl(actorImages[1])} title={getFilenameFromUrl(actorImages[1])} className="card flip-card-back"/>
+          </div>
+          <div className={`flip-card ${isCorrect || attempts > 1 ? 'flip' : ''}`}>
+            <img src={actorCardReverse} alt="Actor 3" className="card flip-card-front"/>
+            <img src={actorImages[2]} alt={getFilenameFromUrl(actorImages[2])} title={getFilenameFromUrl(actorImages[2])} className="card flip-card-back"/>
+          </div>
+          <div className="card">
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Instructions
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                1. Guess the film by its actors.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                2. After every wrong answer a new actor will be revealed.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                3. You have 5 chances to guess the film correctly.
+              </Typography>
+            </CardContent>
+          </div>
+        </div>
+        <div className="flex-row">
+          <div className={`flip-card ${isCorrect || attempts > 2 ? 'flip' : ''}`}>
+            <img src={actorCardReverse} alt="Actor 4" className="card flip-card-front"/>
+            <img src={actorImages[3]} alt={getFilenameFromUrl(actorImages[3])} title={getFilenameFromUrl(actorImages[3])} className="card flip-card-back"/>
+          </div>
+          <div className={`flip-card ${isCorrect || attempts > 3 ? 'flip' : ''}`}>
+            <img src={actorCardReverse} alt="Actor 5" className="card flip-card-front"/>
+            <img src={actorImages[4]} alt={getFilenameFromUrl(actorImages[4])} title={getFilenameFromUrl(actorImages[4])} className="card flip-card-back"/>
+          </div>
+          <div className={`flip-card ${isCorrect || attempts > 4 ? 'flip' : ''}`}>
+            <img src={posterCardReverse} alt="Poster" className="card flip-card-front"/>
+            <img src={posterImage} alt={getFilenameFromUrl(posterImage)} title={getFilenameFromUrl(posterImage)} className="card flip-card-back"/>
+          </div>
+          <div className="card">
+            {gameStarted ? (
+              <>
+                <form onSubmit={handleSubmit}>
+                  <Autocomplete
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Guess"
+                        variant="standard"
+                        autoFocus
+                        autoComplete="off"
+                        spellCheck="false"
+                        inputProps={{ ...params.inputProps, maxLength: 40 }}
+                        sx={{ width: "22vh" }}
+                      />
+                    )}
+                    ref={autocompleteRef}
+                    freeSolo
+                    options={userGuess.length > 0 ? filmNames.filter(name => name.toLowerCase().startsWith(userGuess.toLowerCase())).slice(0, 5) : []}
+                    value={userGuess}
+                    clearIcon={null}
+                    onInputChange={(event, newInputValue) => {setUserGuess(newInputValue);}}
+                    disabled={attempts >= 5 || isCorrect}
+                  />
+                  <Button type="submit" disabled={attempts >= 5 || isCorrect}>
+                    Submit
+                  </Button>
+                </form>
+                <div className="answers">
+                  {message.split("\n").map((line, i) => (
+                    <Typography key={i} style={{color: line.includes("Correct!") ? "green" : "red"}}>
+                      {line}
+                    </Typography>
+                  ))}
                 </div>
-                <div className="flip-card-back">
-                  <img src={actorImages[0]} alt={getFilenameFromUrl(actorImages[0])} title={getFilenameFromUrl(actorImages[0])} className="grid-item"/>
-                </div>
-              </div>
-            </div>
-          </Grid>
-          <Grid item xs={3}>
-            <div className="flip-card">
-              <div className={`flip-card-inner ${isCorrect || attempts > 0 ? 'flip' : ''}`}>
-                <div className="flip-card-front">
-                  <img src={actorCardReverse} alt="Actor 2" className="grid-item"/>
-                </div>
-                <div className="flip-card-back">
-                  <img src={actorImages[1]} alt={getFilenameFromUrl(actorImages[1])} title={getFilenameFromUrl(actorImages[1])} className="grid-item"/>
-                </div>
-              </div>
-            </div>
-          </Grid>
-          <Grid item xs={3}>
-            <div className="flip-card">
-              <div className={`flip-card-inner ${isCorrect || attempts > 1 ? 'flip' : ''}`}>
-                <div className="flip-card-front">
-                  <img src={actorCardReverse} alt="Actor 3" className="grid-item"/>
-                </div>
-                <div className="flip-card-back">
-                  <img src={actorImages[2]} alt={getFilenameFromUrl(actorImages[2])} title={getFilenameFromUrl(actorImages[2])} className="grid-item"/>
-                </div>
-              </div>
-            </div>
-          </Grid>
-          <Grid item xs={3}>
-            <Card className="grid-item">
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  Instructions
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  1. Guess the film by its actors.
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  2. After every wrong answer a new actor will be revealed.
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  3. You have 5 chances to guess the film correctly.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={3}>
-            <div className="flip-card">
-              <div className={`flip-card-inner ${isCorrect || attempts > 2 ? 'flip' : ''}`}>
-                <div className="flip-card-front">
-                  <img src={actorCardReverse} alt="Actor 4" className="grid-item"/>
-                </div>
-                <div className="flip-card-back">
-                  <img src={actorImages[3]} alt={getFilenameFromUrl(actorImages[3])} title={getFilenameFromUrl(actorImages[3])} className="grid-item"/>
-                </div>
-              </div>
-            </div>
-          </Grid>
-          <Grid item xs={3}>
-            <div className="flip-card">
-              <div className={`flip-card-inner ${isCorrect || attempts > 3 ? 'flip' : ''}`}>
-                <div className="flip-card-front">
-                  <img src={actorCardReverse} alt="Actor 5" className="grid-item"/>
-                </div>
-                <div className="flip-card-back">
-                  <img src={actorImages[4]} alt={getFilenameFromUrl(actorImages[4])} title={getFilenameFromUrl(actorImages[4])} className="grid-item"/>
-                </div>
-              </div>
-            </div>
-          </Grid>
-          <Grid item xs={3}>
-            <div className="flip-card">
-              <div className={`flip-card-inner ${isCorrect || attempts > 4 ? 'flip' : ''}`}>
-                <div className="flip-card-front">
-                  <img src={posterCardReverse} alt="Poster" className="grid-item"/>
-                </div>
-                <div className="flip-card-back">
-                  <img src={posterImage} alt={getFilenameFromUrl(posterImage)} title={getFilenameFromUrl(posterImage)} className="grid-item"/>
-                </div>
-              </div>
-            </div>
-          </Grid>
-          <Grid item xs={3}>
-            <Card className="grid-item">
-              {gameStarted ? (
-                <>
-                  <form onSubmit={handleSubmit}>
-                    <Autocomplete
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Guess"
-                          variant="standard"
-                          autoFocus
-                          autoComplete="off"
-                          spellCheck="false"
-                          inputProps={{ ...params.inputProps, maxLength: 40 }}
-                          sx={{ width: "auto", minWidth: 190 }}
-                        />
-                      )}
-                      ref={autocompleteRef}
-                      freeSolo
-                      options={userGuess.length > 0 ? filmNames.filter(name => name.toLowerCase().startsWith(userGuess.toLowerCase())).slice(0, 5) : []}
-                      value={userGuess}
-                      clearIcon={null}
-                      onInputChange={(event, newInputValue) => {setUserGuess(newInputValue);}}
-                      disabled={attempts >= 5 || isCorrect}
-                    />
-                    <Button type="submit" disabled={attempts >= 5 || isCorrect}>
-                      Submit
-                    </Button>
-                  </form>
-                  <div className="answers">
-                    {message.split("\n").map((line, i) => (
-                      <Typography key={i} style={{color: line.includes("Correct!") ? "green" : "red"}}>
-                        {line}
-                      </Typography>
-                    ))}
-                  </div>
-                  {(isCorrect || attempts >= 5) &&
-                    (filmIDs.length > 0 ? (
-                      <Button onClick={handleReset} className="button">New Game</Button>
-                    ) : (
-                      <div className="finished-message">No more new games</div>
-                    ))}
-                </>
-              ) : (
-                <Button onClick={startGame} className="button">Start</Button>
-              )}
-            </Card>
-          </Grid>
-        </Grid>
-      </Container>
+                {(isCorrect || attempts >= 5) &&
+                  (filmIDs.length > 0 ? (
+                    <Button onClick={handleReset} className="button">New Game</Button>
+                  ) : (
+                    <div className="finished-message">No more new games</div>
+                  ))}
+              </>
+            ) : (
+              <Button onClick={startGame} className="button">Start</Button>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
