@@ -1,6 +1,9 @@
 .app-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   background-color: #4e7699;
-  height: 100vh;
+  height: 100vh;  
 }
 
 .header-box {
@@ -17,21 +20,15 @@
 
 .flex-container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2vh;
-}
-
-.flex-row {
-  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 2vh;
+  width: 120vh;
 }
 
 .card {
-  height: 36vh;
   width: 27vh;
+  height: 36vh;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -80,12 +77,11 @@
   height: 40px;
 }
 
+.instructions-text {
+  font-size: 204vh;
+}
+
 .answers {
   text-align: left;
   width: 90%;
-}
-
-.finished-message {
-  text-align: center;
-  margin-top: 10px;
 }

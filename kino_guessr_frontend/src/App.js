@@ -6,7 +6,7 @@ import headerImage from "./images/header.png";
 import actorCardReverse from "./images/actor-card-reverse.png";
 import posterCardReverse from "./images/poster-card-reverse.png";
 
-//function to transform answers to title-case pre-display
+//transform answers to title-case to display
 function toTitleCase(str) {
   return str
     .split(" ")
@@ -14,7 +14,7 @@ function toTitleCase(str) {
     .join(" ");
 }
 
-//function for randomizing the order of actors
+//randomize the order of actors
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -23,7 +23,7 @@ function shuffleArray(array) {
   return array;
 }
 
-//function to extract actor name from file name
+//extract title from file name
 function getFilenameFromUrl(url) {
   if (!url) {return ''}
   const match = url.match(/([^\/]+)(?=\.\w+$)/);
@@ -44,7 +44,7 @@ function App() {
   const [posterImage, setPosterImage] = useState("");
   const autocompleteRef = useRef(null);
 
-  //retrieve film names/ids for autocomplete and data retrieval
+  //retrieve film names/ids for guess autocomplete and film data retrieval
   useEffect(() => {
     axios
       .get("http://localhost:8000/api/get_film_names/")
@@ -136,7 +136,6 @@ function App() {
         <img src={headerImage} alt="Header" className="header-image" />
       </Box>
       <div className="flex-container">
-        <div className="flex-row">
           <div className={`flip-card ${gameStarted ? 'flip' : ''}`}>
             <img src={actorCardReverse} alt="Actor " className="card flip-card-front"/>
             <img src={actorImages[0]} alt={getFilenameFromUrl(actorImages[0])} title={getFilenameFromUrl(actorImages[0])} className="card flip-card-back"/>
@@ -151,22 +150,20 @@ function App() {
           </div>
           <div className="card">
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
+              <Typography gutterBottom variant="h5" component="div" fontSize="2.5vh">
                 Instructions
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" fontSize="1.8vh">
                 1. Guess the film by its actors.
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" fontSize="1.8vh">
                 2. After every wrong answer a new actor will be revealed.
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" fontSize="1.8vh">
                 3. You have 5 chances to guess the film correctly.
               </Typography>
             </CardContent>
           </div>
-        </div>
-        <div className="flex-row">
           <div className={`flip-card ${isCorrect || attempts > 2 ? 'flip' : ''}`}>
             <img src={actorCardReverse} alt="Actor 4" className="card flip-card-front"/>
             <img src={actorImages[3]} alt={getFilenameFromUrl(actorImages[3])} title={getFilenameFromUrl(actorImages[3])} className="card flip-card-back"/>
@@ -210,24 +207,25 @@ function App() {
                 </form>
                 <div className="answers">
                   {message.split("\n").map((line, i) => (
-                    <Typography key={i} style={{color: line.includes("Correct!") ? "green" : "red"}}>
+                    <Typography key={i} fontSize="1.8vh" style={{color: line.includes("Correct!") ? "green" : "red"}}>
                       {line}
                     </Typography>
                   ))}
                 </div>
                 {(isCorrect || attempts >= 5) &&
                   (filmIDs.length > 0 ? (
-                    <Button onClick={handleReset} className="button">New Game</Button>
+                    <Button onClick={handleReset}>New Game</Button>
                   ) : (
-                    <div className="finished-message">No more new games</div>
+                    <Typography variant="body2" color="text.secondary" fontSize="1.8vh">
+                      No more new games
+                    </Typography>
                   ))}
               </>
             ) : (
-              <Button onClick={startGame} className="button">Start</Button>
+              <Button onClick={startGame}>Start</Button>
             )}
           </div>
         </div>
-      </div>
     </div>
   );
 }
