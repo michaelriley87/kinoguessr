@@ -1,6 +1,6 @@
 import "./App.css";
 import React, { useEffect, useRef, useState } from "react";
-import { Autocomplete, Box, Button, CardContent, TextField, Typography } from '@mui/material';
+import { Autocomplete, Button, TextField } from '@mui/material';
 import axios from "axios";
 import headerImage from "./images/header.png";
 import actorCardReverse from "./images/actor-card-reverse.png";
@@ -97,7 +97,11 @@ function App() {
 
     const newAttemptNumber = attempts + 1;
     setAttempts(newAttemptNumber);
-    const guess = userGuess.trim() === "" ? "*Pass*" : toTitleCase(userGuess);
+    let guess = userGuess.trim() === "" ? "*Pass*" : toTitleCase(userGuess);
+
+    if (guess.toLowerCase() !== filmTitle.toLowerCase() && guess.length > 21) {
+      guess = guess.substring(0, 21) + "...";
+    }
 
     if (guess.toLowerCase() === filmTitle.toLowerCase()) {
       setIsCorrect(true);
@@ -118,7 +122,7 @@ function App() {
         input.focus();
       }
     }
-  };
+};
 
   //reset game on 'new game' button click
   const handleReset = () => {
@@ -132,10 +136,8 @@ function App() {
 
   return (
     <div className="app-container">
-      <Box className="header-box">
-        <img src={headerImage} alt="Header" className="header-image" />
-      </Box>
-      <div className="flex-container">
+      <img src={headerImage} alt="Header" className="header-image" />
+      <div className="card-container">
           <div className={`flip-card ${gameStarted ? 'flip' : ''}`}>
             <img src={actorCardReverse} alt="Actor " className="card flip-card-front"/>
             <img src={actorImages[0]} alt={getFilenameFromUrl(actorImages[0])} title={getFilenameFromUrl(actorImages[0])} className="card flip-card-back"/>
@@ -148,21 +150,21 @@ function App() {
             <img src={actorCardReverse} alt="Actor 3" className="card flip-card-front"/>
             <img src={actorImages[2]} alt={getFilenameFromUrl(actorImages[2])} title={getFilenameFromUrl(actorImages[2])} className="card flip-card-back"/>
           </div>
-          <div className="card">
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div" fontSize="2.5vh">
+          <div className="card" id="instructions">
+            <div className="text-card">
+              <div className="text-card-header">
                 Instructions
-              </Typography>
-              <Typography variant="body2" color="text.secondary" fontSize="1.8vh">
+              </div>
+              <div className="text-card-line">
                 1. Guess the film by its actors.
-              </Typography>
-              <Typography variant="body2" color="text.secondary" fontSize="1.8vh">
+              </div>
+              <div className="text-card-line">
                 2. After every wrong answer a new actor will be revealed.
-              </Typography>
-              <Typography variant="body2" color="text.secondary" fontSize="1.8vh">
+              </div>
+              <div className="text-card-line">
                 3. You have 5 chances to guess the film correctly.
-              </Typography>
-            </CardContent>
+              </div>
+            </div>
           </div>
           <div className={`flip-card ${isCorrect || attempts > 2 ? 'flip' : ''}`}>
             <img src={actorCardReverse} alt="Actor 4" className="card flip-card-front"/>
@@ -176,54 +178,53 @@ function App() {
             <img src={posterCardReverse} alt="Poster" className="card flip-card-front"/>
             <img src={posterImage} alt={getFilenameFromUrl(posterImage)} title={getFilenameFromUrl(posterImage)} className="card flip-card-back"/>
           </div>
-          <div className="card">
-            {gameStarted ? (
-              <>
-                <form onSubmit={handleSubmit}>
-                  <Autocomplete
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Guess"
-                        variant="standard"
-                        autoFocus
-                        autoComplete="off"
-                        spellCheck="false"
-                        inputProps={{ ...params.inputProps, maxLength: 40 }}
-                        sx={{ width: "22vh" }}
-                      />
-                    )}
-                    ref={autocompleteRef}
-                    freeSolo
-                    options={userGuess.length > 0 ? filmNames.filter(name => name.toLowerCase().startsWith(userGuess.toLowerCase())).slice(0, 5) : []}
-                    value={userGuess}
-                    clearIcon={null}
-                    onInputChange={(event, newInputValue) => {setUserGuess(newInputValue);}}
-                    disabled={attempts >= 5 || isCorrect}
-                  />
-                  <Button type="submit" disabled={attempts >= 5 || isCorrect}>
-                    Submit
-                  </Button>
-                </form>
-                <div className="answers">
-                  {message.split("\n").map((line, i) => (
-                    <Typography key={i} fontSize="1.8vh" style={{color: line.includes("Correct!") ? "green" : "red"}}>
-                      {line}
-                    </Typography>
-                  ))}
-                </div>
-                {(isCorrect || attempts >= 5) &&
-                  (filmIDs.length > 0 ? (
-                    <Button onClick={handleReset}>New Game</Button>
-                  ) : (
-                    <Typography variant="body2" color="text.secondary" fontSize="1.8vh">
-                      No more new games
-                    </Typography>
-                  ))}
-              </>
-            ) : (
-              <Button onClick={startGame}>Start</Button>
-            )}
+          <div className="card" id="controls">
+            <div className="text-card">
+              {gameStarted ? (
+                <>
+                  <form onSubmit={handleSubmit}>
+                    <Autocomplete
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Guess"
+                          variant="standard"
+                          autoFocus
+                          autoComplete="off"
+                          spellCheck="false"
+                          inputProps={{ ...params.inputProps, maxLength: 40 }}
+                        />
+                      )}
+                      ref={autocompleteRef}
+                      freeSolo
+                      options={userGuess.length > 0 ? filmNames.filter(name => name.toLowerCase().startsWith(userGuess.toLowerCase())).slice(0, 5) : []}
+                      value={userGuess}
+                      clearIcon={null}
+                      onInputChange={(event, newInputValue) => {setUserGuess(newInputValue);}}
+                      disabled={attempts >= 5 || isCorrect}
+                    />
+                    <Button type="submit" className="button" disabled={attempts >= 5 || isCorrect}>Submit</Button>
+                  </form>
+                  <div className="text-card-line">
+                    {message.split("\n").map((line, i) => (
+                      <div key={i} style={{color: line.includes("Correct!") ? "green" : "red"}}>
+                        {line}
+                      </div>
+                    ))}
+                  </div>
+                  {(isCorrect || attempts >= 5) &&
+                    (filmIDs.length > 0 ? (
+                      <Button className="button" onClick={handleReset}>New Game</Button>
+                    ) : (
+                      <div className="text-card-line">
+                        No more new games
+                      </div>
+                    ))}
+                </>
+              ) : (
+                <Button className="button" onClick={startGame}>Start</Button>
+              )}
+            </div>
           </div>
         </div>
     </div>

@@ -60,6 +60,7 @@ Kill Bill: Vol. 1 (2003)
 Kindergarten Cop [1990]
 Knives Out (2019)
 Knocked Up [2007]
+Lara Croft: Tomb Raider (2001)
 Lethal Weapon [1987]
 Liar Liar [1997]
 Limitless [2011]
@@ -70,6 +71,7 @@ Mean Girls [2004]
 Million Dollar Baby [2004]
 Minority Report (2002)
 Mission Impossible [1996]
+Mr. and Mrs. Smith (2005)
 Napoleon Dynamite [2004]
 National Treasure [2004]
 Nightcrawler [2014]
@@ -84,6 +86,7 @@ Primal Fear [1996]
 Prisoners [2013]
 Punch-Drunk Love [2002]
 Ransom [1996]
+Rising Sun (1993)
 RoboCop [1987]
 Ronin [1998]
 Rounders [1998]
@@ -148,6 +151,7 @@ Uncle Buck [1989]
 Uncut Gems [2019]
 V For Vendetta [2005]
 Wall Street [1987]
+Wanted (2008)
 War of the Worlds [2005]
 Wedding Crashers [2005]
 Weird Science [1985] 
