@@ -3,23 +3,20 @@
   background-color: #4e7699;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; 
-  width: 100%; 
+  min-height: 100vh;
+  width: 100%;
 }
-  
 .header-image {
   align-items: center;
   display: flex;
   justify-content: center;
   width: auto;
 }
-  
 .card-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
-  
 .card {
   box-sizing: border-box;
   display: flex;
@@ -29,14 +26,12 @@
   background-color: #f5eedc;
   backface-visibility: hidden;
 }
-
 .flip-card {
   position: relative;
   perspective: 1000px;
   transition: transform 0.35s;
   transform-style: preserve-3d;
 }
-
 .flip-card-front, .flip-card-back {
   position: absolute;
   top: 0;
@@ -47,159 +42,130 @@
   justify-content: center;
   align-items: center;
 }
-
 .flip-card-front {
   z-index: 2;
 }
-
 .flip-card-back {
   transform: rotateY(180deg);
 }
-
 .flip {
   transform: rotateY(180deg);
 }
-
 .text-card {
   width: 100%;
 }
-
 .button {
   width: 100%;
 }
-
 /*styling for landscape mode, sizing by viewport height*/
 @media screen and (min-aspect-ratio: 6 / 5) {
-  .app-container { 
-    min-width: 120vh;
-  }
-
+  .app-container {
+      min-width: 120vh;
+ }
   .header-image {
-    height: 15vh;
-    padding: 1vh;
-  }
-  
+      height: 15vh;
+      padding: 1vh;
+ }
   .card-container {
-    gap: 2vh;
-    width: 120vh;
-  }
-  
+      gap: 2vh;
+      width: 120vh;
+ }
   .card {
-    height: 38vh;
-    width: 28.5vh;
-    border-radius: 2vh;
-    border: 1vh solid white;
-    box-shadow: 0px 1vh 1vh rgba(0, 0, 0, 0.5);
-  }
-
+      height: 38vh;
+      width: 28.5vh;
+      border-radius: 2vh;
+      border: 1vh solid white;
+      box-shadow: 0px 1vh 1vh rgba(0, 0, 0, 0.5);
+ }
   .flip-card {
-    height: 38vh;
-    width: 28.5vh;
-  }
-  
+      height: 38vh;
+      width: 28.5vh;
+ }
   .text-card {
-    padding: 1vh;
-  }
-
+      padding: 1vh;
+ }
   .text-card-header {
-    font-size: 2.5vh;
-    padding: 1vh;
-  }
-
+      font-size: 2.5vh;
+      padding: 1vh;
+ }
   .text-card-line {
-    font-size: 2vh;
-    padding: 1vh;
-  }
-
+      font-size: 2vh;
+      padding: 1vh;
+ }
   .button {
-    height: 3vh;
-    font-size: 1.8vh !important;
-  }
+      height: 3vh;
+      font-size: 1.8vh !important;
+ }
 }
-
 /*styling for square mode, sizing by viewport width*/
 @media screen and (max-aspect-ratio: 6 / 5) {
   .app-container {
-    min-width: 100vw; 
-  }
-  
+      min-width: 100vw;
+ }
   .header-image {
-    height: 12vw;
-    padding: 1vw;
-  }
-  
+      height: 12vw;
+      padding: 1vw;
+ }
   .card-container {
-    gap: 2vw;
-    min-width: 100vw;
-  }
-  
+      gap: 2vw;
+      min-width: 100vw;
+ }
   .card {
-    height: 30vw;
-    width: 22.5vw;
-    border-radius: 2vw;
-    border: 1vw solid white;
-    box-shadow: 0px 1vw 1vw rgba(0, 0, 0, 0.5);
-  }
-  
+      height: 30vw;
+      width: 22.5vw;
+      border-radius: 2vw;
+      border: 1vw solid white;
+      box-shadow: 0px 1vw 1vw rgba(0, 0, 0, 0.5);
+ }
   .flip-card {
-    height: 30vw;
-    width: 22.5vw;
-  }
-
+      height: 30vw;
+      width: 22.5vw;
+ }
   .text-card {
-    padding: 0.5vw;
-  }
-
+      padding: 0.5vw;
+ }
   .text-card-header {
-    font-size: 2.5vw;
-    padding: 0.5vw;
-  }
-
+      font-size: 2vw;
+      padding: 0.8vw;
+ }
   .text-card-line {
-    font-size: 1.5vw;
-    padding: 0.5vw;
-  }
-
+      font-size: 1.75vw;
+      padding: 0.5vw;
+ }
   .button {
-    height: 2vw;
-    font-size: 1.5vw !important;
-  }
+      height: 2vw;
+      font-size: 1.5vw !important;
+ }
 }
-
 /*styling for portrait mode, sizing by viewport width, inheriting styles from square mode*/
 @media screen and (max-aspect-ratio: 3 / 4) {
   #instructions {
-    order:1;
-  }
-
+      order:1;
+ }
   #controls {
-    order:2;
-  }
-  
+      order:2;
+ }
   .card {
-    height: 38vw;
-    width: 28.5vw;
-  }
-  
+      height: 38vw;
+      width: 28.5vw;
+ }
   .flip-card {
-    height: 38vw;
-    width: 28.5vw;
-  }
+      height: 38vw;
+      width: 28.5vw;
+ }
   .text-card {
-    padding: 1vw;
-  }
-
+      padding: 1vw;
+ }
   .text-card-header {
-    font-size: 3vw;
-    padding: 1vw;
-  }
-
+      font-size: 3vw;
+      padding: 1vw;
+ }
   .text-card-line {
-    font-size: 2vw;
-    padding: 1vw;
-  }
+      font-size: 2vw;
+      padding: 1vw;
+ }
   .button {
-    height: 3vw;
-    font-size: 2vw !important;
-  }
+      height: 3vw;
+      font-size: 2vw !important;
+ }
 }
