@@ -1,6 +1,6 @@
 import "./App.css";
 import React, { useEffect, useRef, useState } from "react";
-import { toTitleCase, shuffleArray, getImageFilename } from "./utilities";
+import { toTitleCase, shuffleArray, getImageFilename, sanitizeText } from "./utilities";
 import FlipCard from "./components/FlipCard.jsx";
 import InstructionsCard from "./components/InstructionsCard.jsx";
 import ControlsCard from "./components/ControlsCard.jsx";
@@ -24,7 +24,7 @@ function App() {
 
   // Load film data from `films.json`
   useEffect(() => {
-    fetch("/films.json")
+    fetch(`${import.meta.env.BASE_URL}films.json`)
       .then((response) => response.json())
       .then((data) => {
         setFilmData(data);
@@ -34,22 +34,40 @@ function App() {
       .catch((error) => console.error("Error loading film data:", error));
   }, []);
 
-  // Start the game by selecting a random film
+  // Start a new game by selecting a random film and loading its images
   const startGame = () => {
     if (filmData.length === 0) return;
+    setGameStarted(false);
+    setActorImages([]); 
+    setPosterImage("");
+  
     const randomFilm = filmData[Math.floor(Math.random() * filmData.length)];
     setFilmTitle(randomFilm.title);
-    setActorImages(shuffleArray(randomFilm.actors.map(actor => ({
-        name: actor,
-        src: getImageFilename(actor)
-    }))));
-    setPosterImage({
-        name: randomFilm.title,
-        src: getImageFilename(randomFilm.title)
+  
+    const actorSources = shuffleArray(randomFilm.actors.map(actor => ({
+      name: actor,
+      src: getImageFilename(actor)
+    })));
+  
+    const posterSource = {
+      name: randomFilm.title,
+      src: getImageFilename(randomFilm.title)
+    };
+  
+    Promise.all([...actorSources, posterSource].map(img => 
+      new Promise(resolve => {
+        const preloader = new Image();
+        preloader.src = img.src;
+        preloader.onload = resolve;
+        preloader.onerror = resolve;
+      })
+    )).then(() => {
+      setActorImages(actorSources);
+      setPosterImage(posterSource);
+      setGameStarted(true);
     });
-    setGameStarted(true);
   };
-
+  
   // Handle user guesses
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -59,7 +77,7 @@ function App() {
     setAttempts(newAttemptNumber);
     let guess = userGuess.trim() === "" ? "*Pass*" : toTitleCase(userGuess);
 
-    if (guess.toLowerCase() === filmTitle.toLowerCase()) {
+    if (sanitizeText(guess) === sanitizeText(filmTitle)) {
       setIsCorrect(true);
       setMessage(prev => prev + `\n${newAttemptNumber}. ${guess} - Correct!`);
     } else {

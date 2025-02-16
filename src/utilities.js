@@ -17,8 +17,13 @@ return array;
 
 // Convert any name (film title or actor) to a sanitized image filename
 export function getImageFilename(name) {
-  return `/images/${name
+  return `${import.meta.env.BASE_URL}images/${name
     .toLowerCase()
-    .replace(/['!.,:?]/g, "") // Remove punctuation
+    .replace(/['!.,:?]/g, "")
     .replace(/ /g, "_")}.jpg`;
+}
+
+// Remove punctuation for text comparison
+export function sanitizeText(text) {
+  return text.toLowerCase().replace(/['!.,:?]/g, "");
 }
