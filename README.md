@@ -20,6 +20,4 @@ Welcome to KinoGuessr, a captivating movie guessing game. Inspired by the popula
 
 ## Technologies Used
 - **ReactJS:** For building the user interface.
-- **Material-UI:** For styling components.
-- **Django:** Used for managing the film titles, actor images and poster images.
 - **Stable Diffusion:** For generating the reverse card art.
