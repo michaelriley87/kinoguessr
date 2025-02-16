@@ -1,26 +1,24 @@
-# Python-related items
-venv/
-*.pyc
-__pycache__/
-db.sqlite3
-
-# Django media files
-media/
-
-# Django specific
+# Logs
+logs
 *.log
-.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# React/node.js specific
-kino_guessr_frontend/node_modules/
-kino_guessr_frontend/build/
-kino_guessr_frontend/.env
-kino_guessr_frontend/npm-debug.log
+node_modules
+dist
+dist-ssr
+*.local
 
-# MacOS specific
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-
-# Editor specific
-.vscode/
-.idea/
-*.swp
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
