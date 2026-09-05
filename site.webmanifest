@@ -1,0 +1,10 @@
+{
+  "name": "KinoGuessr",
+  "short_name": "KinoGuessr",
+  "icons": [
+    { "src": "/logo192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/logo512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "theme_color": "#4e7699",
+  "background_color": "#4e7699"
+}
