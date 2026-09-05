@@ -2,7 +2,7 @@
   "name": "kinoguessr",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://michaelriley87.github.io/kinoguessr/",
+  "homepage": "https://kinoguessr.michaelriley.au/",
   "type": "module",
   "scripts": {
     "dev": "vite",
